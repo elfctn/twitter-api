@@ -14,3 +14,5 @@ public interface TweetService {
 }
 
 //sadece metıd imzalarım var gövdeler yok
+//save - update -del ederim ama nasıl yapıldığını söylemem
+//sözleşme gibi
