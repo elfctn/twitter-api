@@ -1,0 +1,162 @@
+### Değişken Tanımlamaları
+# Bu değişkenler, bu dosyadaki tüm isteklerde kullanılabilir.
+@baseUrl = http://localhost:3000
+
+# İki farklı kullanıcı ile test yapabilmek için iki ayrı token değişkeni
+@user1_token =
+@user2_token =
+
+###########################################################
+### 0. ADIM: Test Kullanıcılarını Oluşturma
+###########################################################
+
+### Kullanıcı 1'i Kaydet
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "user1",
+  "password": "password123",
+  "email": "user1@test.com"
+}
+
+### Kullanıcı 2'yi Kaydet
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "user2",
+  "password": "password123",
+  "email": "user2@test.com"
+}
+
+
+###########################################################
+### 1. ADIM: Giriş Yap ve Token'ları Al
+###########################################################
+
+### Kullanıcı 1 olarak giriş yap ve token'ı kaydet
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "user1",
+  "password": "password123"
+}
+> {%
+    client.global.set("user1_token", response.body.token);
+%}
+
+### Kullanıcı 2 olarak giriş yap ve token'ı kaydet
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "user2",
+  "password": "password123"
+}
+> {%
+    client.global.set("user2_token", response.body.token);
+%}
+
+
+###########################################################
+### BÖLÜM: EASY
+###########################################################
+
+### [POST /tweet] => Yeni bir tweet oluştur (user1 olarak)
+POST {{baseUrl}}/tweet
+Content-Type: application/json
+Authorization: Bearer {{user1_token}}
+
+{
+  "content": "Bu user1 tarafından atılan ilk tweet!"
+}
+
+### [GET /tweet/findByUserId] => Bir kullanıcının tüm tweet'lerini getir (user1'in tweetleri)
+# Not: Gerçek user ID'sini veritabanından veya önceki isteğin cevabından kontrol etmelisin.
+# Genellikle ilk kullanıcı için ID 1 olur.
+GET {{baseUrl}}/tweet/findByUserId?userId=1
+Authorization: Bearer {{user1_token}}
+
+### [GET /tweet/:id] => Bir tweet'in tüm bilgilerini getir (ID'si 1 olan tweet)
+GET {{baseUrl}}/tweet/1
+Authorization: Bearer {{user1_token}}
+
+### [PUT /tweet/:id] => Bir tweet'i güncelle (user1, kendi tweet'ini güncelliyor)
+PUT {{baseUrl}}/tweet/1
+Content-Type: application/json
+Authorization: Bearer {{user1_token}}
+
+{
+  "content": "Bu user1 tarafından güncellenmiş tweet içeriği!"
+}
+
+### [DELETE /tweet/:id] => Bir tweet'i sil (user1, kendi tweet'ini siliyor)
+DELETE {{baseUrl}}/tweet/1
+Authorization: Bearer {{user1_token}}
+
+
+###########################################################
+### BÖLÜM: MEDIUM
+###########################################################
+
+### Önce test için yeni bir tweet atalım (user1 olarak)
+POST {{baseUrl}}/tweet
+Content-Type: application/json
+Authorization: Bearer {{user1_token}}
+
+{
+  "content": "Yorum ve beğeni testi için atılan tweet!"
+}
+
+### [POST /comment/:id] => Bir tweete yorum yap (user2, user1'in tweet'ine yorum yapıyor)
+# Not: Yorum yapılacak tweetin ID'sini bilmelisin.
+# Yukarıdaki isteğin cevabından bakarak veya veritabanından kontrol ederek ID'yi buraya yaz.
+# Genellikle ID 2 olacaktır.
+POST {{baseUrl}}/comment/2
+Content-Type: application/json
+Authorization: Bearer {{user2_token}}
+
+{
+  "content": "Bu user2 tarafından yapılan bir yorumdur."
+}
+
+### [PUT /comment/:id] => Bir yorumu güncelle (user2, kendi yorumunu güncelliyor)
+# Not: Yorumun ID'sini bilmelisin. Genellikle 1 olur.
+PUT {{baseUrl}}/comment/1
+Content-Type: application/json
+Authorization: Bearer {{user2_token}}
+
+{
+  "content": "User2'nin güncellenmiş yorumu."
+}
+
+### [DELETE /comment/:id] => Bir yorumu sil (user1 - tweet sahibi olarak, user2'nin yorumunu siliyor)
+# Bu işlemin başarılı olması beklenir.
+DELETE {{baseUrl}}/comment/1
+Authorization: Bearer {{user1_token}}
+
+
+### [POST /like/:id] => Bir tweete like at (user2, user1'in tweet'ini beğeniyor)
+POST {{baseUrl}}/like/2
+Authorization: Bearer {{user2_token}}
+
+### [DELETE /like/:id] => Bir tweet'in beğenisini geri al (Projedeki /dislike karşılığı)
+DELETE {{baseUrl}}/like/2
+Authorization: Bearer {{user2_token}}
+
+
+###########################################################
+### BÖLÜM: HARD
+###########################################################
+
+### [POST /retweet/:id] => Bir tweet'i retweetle (user2, user1'in tweet'ini retweetliyor)
+POST {{baseUrl}}/retweet/2
+Authorization: Bearer {{user2_token}}
+
+### [DELETE /retweet/:id] => Bir retweet'i sil
+# Not: Retweet'in ID'sini bilmelisin. Genellikle 1 olur.
+DELETE {{baseUrl}}/retweet/1
+Authorization: Bearer {{user2_token}}
+
