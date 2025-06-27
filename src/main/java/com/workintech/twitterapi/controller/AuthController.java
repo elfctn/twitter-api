@@ -1,10 +1,11 @@
 package com.workintech.twitterapi.controller;
 
+import com.workintech.twitterapi.dto.LoginRequestDTO;
+import com.workintech.twitterapi.dto.LoginResponseDTO;
+import com.workintech.twitterapi.dto.RegistrationResponseDTO;
 import com.workintech.twitterapi.dto.UserCreateDTO;
-import com.workintech.twitterapi.dto.UserResponseDTO;
 import com.workintech.twitterapi.entity.User;
-import com.workintech.twitterapi.mapper.UserMapper; // Mapper'ı import ediyoruz
-import com.workintech.twitterapi.service.UserService;
+import com.workintech.twitterapi.service.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,41 +18,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserService userService;
-    private final UserMapper userMapper; // Mapper'ı enjekte ediyoruz
+    private final AuthenticationService authenticationService;
 
-    // Constructor'a UserMapper'ı da ekliyoruz. Spring bunu otomatik olarak bulup verecek.
-    public AuthController(UserService userService, UserMapper userMapper) {
-        this.userService = userService;
-        this.userMapper = userMapper;
+    public AuthController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserCreateDTO userCreateDTO) {
-        User registeredUser = userService.register(userCreateDTO);
-
-        // Artık manuel `convertToDTO` yerine, otomatik `userMapper`'ı kullanıyoruz.
-        return new ResponseEntity<>(userMapper.userToUserResponseDTO(registeredUser), HttpStatus.CREATED);
+    public ResponseEntity<RegistrationResponseDTO> register(@Valid @RequestBody UserCreateDTO userCreateDTO) {
+        User registeredUser = authenticationService.register(userCreateDTO);
+        RegistrationResponseDTO response = new RegistrationResponseDTO(
+                registeredUser.getId(),
+                "Kullanıcı başarıyla kaydedildi."
+        );
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // Artık bu manuel metoda ihtiyacımız kalmadı! Silebiliriz.
-    /*
-    private UserResponseDTO convertToDTO(User user) {
-        UserResponseDTO dto = new UserResponseDTO();
-        dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
-        dto.setEmail(user.getEmail());
-        if (user.getTweets() != null) {
-            dto.setTweets(user.getTweets().stream()
-                .map(tweet -> new UserResponseDTO.TweetSummaryDTO(
-                    tweet.getId(),
-                    tweet.getContent()
-                ))
-                .collect(Collectors.toList()));
-        } else {
-            dto.setTweets(new ArrayList<>());
-        }
-        return dto;
+    // Yeni eklenen /login endpoint'i
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+        String token = authenticationService.login(loginRequestDTO);
+        LoginResponseDTO response = new LoginResponseDTO(token);
+        return ResponseEntity.ok(response);
     }
-    */
 }

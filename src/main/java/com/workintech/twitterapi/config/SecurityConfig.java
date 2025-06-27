@@ -2,10 +2,14 @@ package com.workintech.twitterapi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -15,22 +19,24 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // @Bean SecurityFilterChain: Spring Security'nin ana güvenlik kurallarını
-    // tanımladığımız yer burasıdır. Bu metot, projemizin "güvenlik kalkanını" oluşturur.
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         return http
-                // CSRF korumasını devre dışı bırakıyoruz. REST API'lerde genellikle gereksizdir.
                 .csrf(csrf -> csrf.disable())
-                // Gelen isteklere (HttpRequests) yetkilendirme kuralları uygula.
+                // Session yönetimini STATELESS yapıyoruz. Her istek kendi kimliğini kendi taşımalı.
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
-                    // Kural 1: "/auth/**" ile başlayan tüm yollara (yani /auth/register, /auth/login vs.)
-                    // kimlik sormadan, herkese (permitAll) izin ver.
                     auth.requestMatchers("/auth/**").permitAll();
-                    // Kural 2: Yukarıdaki kuralın dışındaki DİĞER TÜM isteklere (anyRequest)
-                    // sadece kimliği doğrulanmış (authenticated) kullanıcıların erişebilmesini sağla.
                     auth.anyRequest().authenticated();
                 })
+                // Oluşturduğumuz JWT filtresini, standart kullanıcı adı/şifre filtresinden
+                // ÖNCE çalışacak şekilde zincire ekliyoruz.
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
