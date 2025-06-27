@@ -3,6 +3,7 @@ package com.workintech.twitterapi.service;
 import com.workintech.twitterapi.dto.UserDTO;
 import com.workintech.twitterapi.entity.User;
 import com.workintech.twitterapi.repository.UserRepository;
+import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +36,15 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findByUsername(String username) {
         // 4. Null Safety: Kullanıcı bulunamazsa NullPointerException almamak için Optional kullanıyorm.
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public User getById(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if(optionalUser.isPresent()){
+            return optionalUser.get();
+        }
+        // TODO: Burası için "UserNotFoundException" oluşturulacak.
+        throw new RuntimeException("User not found with id: " + id);
     }
 }

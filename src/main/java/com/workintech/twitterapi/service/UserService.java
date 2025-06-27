@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface UserService {
     User register(UserDTO userDTO);
     Optional<User> findByUsername(String username);
+    User getById(Long id);
 }
