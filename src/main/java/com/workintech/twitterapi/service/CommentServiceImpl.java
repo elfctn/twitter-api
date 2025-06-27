@@ -1,65 +1,75 @@
 package com.workintech.twitterapi.service;
 
+import com.workintech.twitterapi.dto.CommentCreateDTO;
 import com.workintech.twitterapi.entity.Comment;
+import com.workintech.twitterapi.entity.Tweet;
+import com.workintech.twitterapi.entity.User;
 import com.workintech.twitterapi.repository.CommentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 public class CommentServiceImpl implements CommentService {
+    private final CommentRepository commentRepository;
+    private final UserService userService;
+    private final TweetService tweetService;
 
-
-    private final CommentRepository commentRepository;//final: servis bir kere oluştuktan sonra deposunun değişmemesi gerekir (Güvenlik).
-
-
-    @Autowired
-    public CommentServiceImpl(CommentRepository commentRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, UserService userService, TweetService tweetService) {
         this.commentRepository = commentRepository;
+        this.userService = userService;
+        this.tweetService = tweetService;
     }
 
     @Override
-    public Comment save(Comment comment) {
-        // Görev: Gelen yorum nesnesini veritabanına kaydet.
+    public Comment save(Long tweetId, String username, CommentCreateDTO commentCreateDTO) {
+        User user = userService.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı: " + username));
+        Tweet tweet = tweetService.getById(tweetId);
+
+        Comment comment = new Comment();
+        comment.setContent(commentCreateDTO.getContent());
+        comment.setUser(user);
+        comment.setTweet(tweet);
         return commentRepository.save(comment);
     }
 
     @Override
     public List<Comment> getByTweetId(Long tweetId) {
-        // Görev: Belirli bir tweet'e ait tüm yorumları liste olarak getir.
         return commentRepository.findByTweetId(tweetId);
     }
 
     @Override
     public Comment getById(Long id) {
-        // Görev: Verilen ID'ye göre tek bir yorum ara.
-        Optional<Comment> optionalComment = commentRepository.findById(id);
-        // Görev: Eğer yorum bulunduysa, yorumu döndür.
-        if(optionalComment.isPresent()){
-            return optionalComment.get();
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Yorum bulunamadı: " + id));
+    }
+
+    @Override
+    public Comment update(Long id, String username, CommentCreateDTO commentCreateDTO) {
+        Comment commentToUpdate = getById(id);
+        if (!commentToUpdate.getUser().getUsername().equals(username)) {
+            throw new RuntimeException("Yetkisiz işlem: Bu yorumu güncelleme yetkiniz yok.");
         }
-        // Görev: Bulunamazsa, programın çökmemesi için bir hata fırlat.
-        throw new RuntimeException("Yorum bulunamadı: " + id);
+        commentToUpdate.setContent(commentCreateDTO.getContent());
+        return commentRepository.save(commentToUpdate);
     }
 
     @Override
-    public Comment update(Long id, Comment comment) {
-        // Görev: Önce güncellenecek yorumu ID'si ile bul.
-        Comment existingComment = getById(id);
-        // Görev: Bulunan yorumun içeriğini dışarıdan gelen yeni içerik ile değiştir.
-        existingComment.setContent(comment.getContent());
-        // Görev: Güncellenmiş yorumu veritabanına kaydet.
-        return commentRepository.save(existingComment);
-    }
+    public void delete(Long id, String username) {
+        Comment commentToDelete = getById(id);
+        User user = userService.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı: " + username));
 
-    @Override
-    public void delete(Long id) {
-        // Görev: Verilen IDye sahip yorumu veritabanından sil.
-        // TODO: Proje isterlerindeki "Yorumu sadece tweet sahibi veya yorumun sahibi silebilir"
-        //  güvenlik kuralı, Spring Security eklendikten sonra buraya ekle.
-        commentRepository.deleteById(id);
+        // Proje İsteri: "Yorumu sadece tweet sahibi veya yorum sahibi silebilmelidir."
+        boolean isCommentOwner = commentToDelete.getUser().getUsername().equals(username);
+        boolean isTweetOwner = commentToDelete.getTweet().getUser().getUsername().equals(username);
+
+        if (!isCommentOwner && !isTweetOwner) {
+            throw new RuntimeException("Yetkisiz işlem: Bu yorumu silme yetkiniz yok.");
+        }
+
+        commentRepository.delete(commentToDelete);
     }
 }
