@@ -3,6 +3,7 @@ package com.workintech.twitterapi.controller;
 import com.workintech.twitterapi.dto.RetweetCountResponseDTO;
 import com.workintech.twitterapi.dto.RetweetResponseDTO;
 import com.workintech.twitterapi.entity.Retweet;
+import com.workintech.twitterapi.mapper.RetweetMapper; // Mapper'ı import ediyoruz
 import com.workintech.twitterapi.service.RetweetService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class RetweetController {
 
     private final RetweetService retweetService;
+    private final RetweetMapper retweetMapper; // Mapper'ı enjekte ediyoruz
 
-    public RetweetController(RetweetService retweetService) {
+    public RetweetController(RetweetService retweetService, RetweetMapper retweetMapper) {
         this.retweetService = retweetService;
+        this.retweetMapper = retweetMapper;
     }
 
     // Bir tweet'i retweetler. Proje isterlerindeki POST /retweet endpoint'i.
@@ -24,7 +27,8 @@ public class RetweetController {
     public ResponseEntity<RetweetResponseDTO> retweet(@PathVariable Long tweetId, Authentication authentication) {
         String username = authentication.getName();
         Retweet savedRetweet = retweetService.save(username, tweetId);
-        return new ResponseEntity<>(convertToDTO(savedRetweet), HttpStatus.CREATED);
+        // Artık manuel `convertToDTO` yerine, otomatik `retweetMapper`'ı kullanıyoruz.
+        return new ResponseEntity<>(retweetMapper.retweetToRetweetResponseDTO(savedRetweet), HttpStatus.CREATED);
     }
 
     // Bir retweet'i siler. Proje isterlerindeki DELETE /retweet/:id endpoint'i.
@@ -40,14 +44,5 @@ public class RetweetController {
     public RetweetCountResponseDTO getRetweetCount(@PathVariable Long tweetId) {
         int count = retweetService.getRetweetCount(tweetId);
         return new RetweetCountResponseDTO(tweetId, count);
-    }
-
-    private RetweetResponseDTO convertToDTO(Retweet retweet) {
-        return new RetweetResponseDTO(
-                retweet.getId(),
-                retweet.getCreatedAt(),
-                retweet.getUser().getId(),
-                retweet.getTweet().getId()
-        );
     }
 }

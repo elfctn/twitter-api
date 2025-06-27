@@ -3,6 +3,7 @@ package com.workintech.twitterapi.controller;
 import com.workintech.twitterapi.dto.UserCreateDTO;
 import com.workintech.twitterapi.dto.UserResponseDTO;
 import com.workintech.twitterapi.entity.User;
+import com.workintech.twitterapi.mapper.UserMapper; // Mapper'ı import ediyoruz
 import com.workintech.twitterapi.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -12,30 +13,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
     private final UserService userService;
+    private final UserMapper userMapper; // Mapper'ı enjekte ediyoruz
 
-    public AuthController(UserService userService) {
+    // Constructor'a UserMapper'ı da ekliyoruz. Spring bunu otomatik olarak bulup verecek.
+    public AuthController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
-    // Proje isterlerindeki /register endpoint'i.
     @PostMapping("/register")
-    // @Valid: Spring'e, UserCreateDTO üzerindeki doğrulama kurallarını
-    // (@NotNull, @Size, @Email) kontrol etmesini söyler.
     public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserCreateDTO userCreateDTO) {
         User registeredUser = userService.register(userCreateDTO);
-        // Yeni bir kaynak oluşturulduğu için HTTP 201 Created durumu döndürmek daha doğru
-        return new ResponseEntity<>(convertToDTO(registeredUser), HttpStatus.CREATED);
+
+        // Artık manuel `convertToDTO` yerine, otomatik `userMapper`'ı kullanıyoruz.
+        return new ResponseEntity<>(userMapper.userToUserResponseDTO(registeredUser), HttpStatus.CREATED);
     }
 
-    // Entity'yi DTO'ya çeviren yardımcı metot. UserController'dan kopyaladım.
+    // Artık bu manuel metoda ihtiyacımız kalmadı! Silebiliriz.
+    /*
     private UserResponseDTO convertToDTO(User user) {
         UserResponseDTO dto = new UserResponseDTO();
         dto.setId(user.getId());
@@ -43,14 +43,15 @@ public class AuthController {
         dto.setEmail(user.getEmail());
         if (user.getTweets() != null) {
             dto.setTweets(user.getTweets().stream()
-                    .map(tweet -> new UserResponseDTO.TweetSummaryDTO(
-                            tweet.getId(),
-                            tweet.getContent()
-                    ))
-                    .collect(Collectors.toList()));
+                .map(tweet -> new UserResponseDTO.TweetSummaryDTO(
+                    tweet.getId(),
+                    tweet.getContent()
+                ))
+                .collect(Collectors.toList()));
         } else {
             dto.setTweets(new ArrayList<>());
         }
         return dto;
     }
+    */
 }

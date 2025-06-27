@@ -3,6 +3,7 @@ package com.workintech.twitterapi.controller;
 import com.workintech.twitterapi.dto.CommentCreateDTO;
 import com.workintech.twitterapi.dto.CommentResponseDTO;
 import com.workintech.twitterapi.entity.Comment;
+import com.workintech.twitterapi.mapper.CommentMapper; // Mapper'ı import ediyoruz
 import com.workintech.twitterapi.service.CommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,16 +11,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/comment")
 public class CommentController {
 
     private final CommentService commentService;
+    private final CommentMapper commentMapper; // Mapper'ı enjekte ediyoruz
 
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService, CommentMapper commentMapper) {
         this.commentService = commentService;
+        this.commentMapper = commentMapper;
     }
 
     // Bir tweete yeni bir yorum ekler.
@@ -29,16 +31,16 @@ public class CommentController {
                                                             Authentication authentication) {
         String username = authentication.getName();
         Comment savedComment = commentService.save(tweetId, username, commentDTO);
-        return new ResponseEntity<>(convertToDTO(savedComment), HttpStatus.CREATED);
+        // Artık manuel `convertToDTO` yerine, otomatik `commentMapper`'ı kullanıyoruz.
+        return new ResponseEntity<>(commentMapper.commentToCommentResponseDTO(savedComment), HttpStatus.CREATED);
     }
 
     // Bir tweete ait tüm yorumları listeler.
     @GetMapping("/tweet/{tweetId}")
     public List<CommentResponseDTO> getCommentsByTweetId(@PathVariable Long tweetId) {
         List<Comment> comments = commentService.getByTweetId(tweetId);
-        return comments.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        // Liste dönüşümü için de mapper'ımızı kullanıyoruz.
+        return commentMapper.commentListToCommentResponseDTOList(comments);
     }
 
     // Mevcut bir yorumu günceller.
@@ -48,7 +50,7 @@ public class CommentController {
                                             Authentication authentication) {
         String username = authentication.getName();
         Comment updatedComment = commentService.update(id, username, commentDTO);
-        return convertToDTO(updatedComment);
+        return commentMapper.commentToCommentResponseDTO(updatedComment);
     }
 
     // Bir yorumu siler.
@@ -57,20 +59,5 @@ public class CommentController {
         String username = authentication.getName();
         commentService.delete(id, username);
         return ResponseEntity.noContent().build();
-    }
-
-
-    // Entity'yi Response DTO'ya çeviren yardımcı metot.
-    private CommentResponseDTO convertToDTO(Comment comment) {
-        CommentResponseDTO dto = new CommentResponseDTO();
-        dto.setId(comment.getId());
-        dto.setContent(comment.getContent());
-        dto.setCreatedAt(comment.getCreatedAt());
-        dto.setTweetId(comment.getTweet().getId());
-        dto.setUser(new CommentResponseDTO.UserSummaryDTO(
-                comment.getUser().getId(),
-                comment.getUser().getUsername())
-        );
-        return dto;
     }
 }

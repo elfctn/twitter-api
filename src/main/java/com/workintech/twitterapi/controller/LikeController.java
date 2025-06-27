@@ -3,6 +3,7 @@ package com.workintech.twitterapi.controller;
 import com.workintech.twitterapi.dto.LikeCountResponseDTO;
 import com.workintech.twitterapi.dto.LikeResponseDTO;
 import com.workintech.twitterapi.entity.Like;
+import com.workintech.twitterapi.mapper.LikeMapper; // Mapper'ı import ediyoruz
 import com.workintech.twitterapi.service.LikeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class LikeController {
 
     private final LikeService likeService;
+    private final LikeMapper likeMapper; // Mapper'ı enjekte ediyoruz
 
-    public LikeController(LikeService likeService) {
+    public LikeController(LikeService likeService, LikeMapper likeMapper) {
         this.likeService = likeService;
+        this.likeMapper = likeMapper;
     }
 
     // Bir tweet'i beğenir. Proje isterlerindeki POST /like endpoint'i.
@@ -24,7 +27,8 @@ public class LikeController {
     public ResponseEntity<LikeResponseDTO> like(@PathVariable Long tweetId, Authentication authentication) {
         String username = authentication.getName();
         Like savedLike = likeService.save(username, tweetId);
-        return new ResponseEntity<>(convertToDTO(savedLike), HttpStatus.CREATED);
+        // Artık manuel `convertToDTO` yerine, otomatik `likeMapper`'ı kullanıyoruz.
+        return new ResponseEntity<>(likeMapper.likeToLikeResponseDTO(savedLike), HttpStatus.CREATED);
     }
 
     // Bir tweet'e atılan beğeniyi geri alır. Proje isterlerindeki POST /dislike endpoint'i için DELETE metodu daha uygundur.
@@ -40,9 +44,5 @@ public class LikeController {
     public LikeCountResponseDTO getLikeCount(@PathVariable Long tweetId) {
         int count = likeService.getLikeCount(tweetId);
         return new LikeCountResponseDTO(tweetId, count);
-    }
-
-    private LikeResponseDTO convertToDTO(Like like) {
-        return new LikeResponseDTO(like.getId(), like.getUser().getId(), like.getTweet().getId());
     }
 }
