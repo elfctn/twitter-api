@@ -2,6 +2,7 @@ package com.workintech.twitterapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data; // Lombok kütüphanesi için import
 import lombok.NoArgsConstructor; // Lombok kütüphanesi için import
 
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data // Getter, Setter, toString, equals, hashCode otomatik oluşturur
+@AllArgsConstructor
 @NoArgsConstructor // Parametresiz constructor oluşturur (Lombok tarafından)
 @Entity
 @Table(name = "\"User\"", schema = "public") // Veritabanı tablo adı ve şema
