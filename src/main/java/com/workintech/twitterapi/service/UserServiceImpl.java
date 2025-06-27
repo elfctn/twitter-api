@@ -2,6 +2,7 @@ package com.workintech.twitterapi.service;
 
 import com.workintech.twitterapi.dto.UserCreateDTO;
 import com.workintech.twitterapi.entity.User;
+import com.workintech.twitterapi.exception.UserNotFoundException;
 import com.workintech.twitterapi.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,11 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if(optionalUser.isPresent()){
-            return optionalUser.get();
-        }
-        // TODO: Burası için "UserNotFoundException" oluşturulacak.
-        throw new RuntimeException("User not found with id: " + id);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + id));
     }
 }

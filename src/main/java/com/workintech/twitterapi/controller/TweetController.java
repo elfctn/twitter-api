@@ -55,12 +55,16 @@ public class TweetController {
     }
 
     @PutMapping("/{id}")
-    public TweetResponseDTO updateTweet(@PathVariable Long id, @RequestBody TweetCreateDTO tweetCreateDTO) {
-        // Güncelleme için de aynı DTO'yu kullanabiliriz.
-        Tweet updatedTweet = tweetService.update(id, tweetCreateDTO);
+    public TweetResponseDTO updateTweet(@PathVariable Long id,
+                                        @RequestBody TweetCreateDTO tweetCreateDTO,
+                                        Authentication authentication) { // 1. Authentication eklendi
+        // 2. İşlemi yapan kullanıcının adı alındı
+        String username = authentication.getName();
+        // 3. Servis metodu artık 3 parametre ile doğru şekilde çağırılıyor
+        Tweet updatedTweet = tweetService.update(id, tweetCreateDTO, username);
+
         return convertToDTO(updatedTweet);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTweet(@PathVariable Long id, Authentication authentication) {
         // Controller, silme yetkisi kontrolü için kullanıcı adını da servise gönderir.

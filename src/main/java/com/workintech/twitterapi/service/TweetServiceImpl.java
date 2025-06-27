@@ -3,17 +3,19 @@ package com.workintech.twitterapi.service;
 import com.workintech.twitterapi.dto.TweetCreateDTO;
 import com.workintech.twitterapi.entity.Tweet;
 import com.workintech.twitterapi.entity.User;
+import com.workintech.twitterapi.exception.TweetNotFoundException;
+import com.workintech.twitterapi.exception.TwitterAuthException;
+import com.workintech.twitterapi.exception.UserNotFoundException;
 import com.workintech.twitterapi.repository.TweetRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TweetServiceImpl implements TweetService {
 
     private final TweetRepository tweetRepository;
-    private final UserService userService; // Diğer servislere bağımlılık
+    private final UserService userService;
 
     public TweetServiceImpl(TweetRepository tweetRepository, UserService userService) {
         this.tweetRepository = tweetRepository;
@@ -22,11 +24,10 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     public Tweet save(TweetCreateDTO tweetCreateDTO, String username) {
-        // İş Mantığı: Controller'dan alınan kullanıcı adıyla ilgili User nesnesini bul.
         User user = userService.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı: " + username));
+                // RuntimeException yerine artık kendi özel hatamızı fırlatıyoruz.
+                .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + username));
 
-        // İş Mantığı: Yeni bir Tweet nesnesi yarat ve verileri set et.
         Tweet tweet = new Tweet();
         tweet.setContent(tweetCreateDTO.getContent());
         tweet.setUser(user);
@@ -40,11 +41,8 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     public Tweet getById(Long id) {
-        Optional<Tweet> optionalTweet = tweetRepository.findById(id);
-        if(optionalTweet.isPresent()){
-            return optionalTweet.get();
-        }
-        throw new RuntimeException("Tweet not found with id: " + id);
+        return tweetRepository.findById(id)
+                .orElseThrow(() -> new TweetNotFoundException("Tweet bulunamadı: " + id));
     }
 
     @Override
@@ -53,12 +51,14 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
-    public Tweet update(Long id, TweetCreateDTO tweetCreateDTO) {
+    public Tweet update(Long id, TweetCreateDTO tweetCreateDTO, String username) {
         Tweet existingTweet = getById(id);
 
-        // TODO: Güvenlik kontrolü - Bu tweet'i güncellemeye yetkisi var mı?
-        // Bu kontrol, Spring Security eklendikten sonra eklenebilir.
-        // Örnek: if(!existingTweet.getUser().getUsername().equals(authentication.getName())){...}
+        // Güvenlik Kuralı: Tweet'i sadece sahibi güncelleyebilir.
+        if(!existingTweet.getUser().getUsername().equals(username)){
+            // RuntimeException yerine artık kendi özel yetki hatamızı fırlatıyoruz.
+            throw new TwitterAuthException("Yetkisiz işlem: Bu tweet'i güncelleme yetkiniz yok.");
+        }
 
         existingTweet.setContent(tweetCreateDTO.getContent());
         return tweetRepository.save(existingTweet);
@@ -68,11 +68,10 @@ public class TweetServiceImpl implements TweetService {
     public void delete(Long id, String username) {
         Tweet tweetToDelete = getById(id);
 
-        // Güvenlik İş Kuralı: Proje isterlerindeki en önemli kurallardan biri.
-        // Silinmek istenen tweet'in sahibi, işlemi yapan kullanıcı mı?
+        // Güvenlik Kuralı: Tweet'i sadece sahibi silebilir.
         if (!tweetToDelete.getUser().getUsername().equals(username)) {
-            // TODO: Burası için özel bir "UnauthorizedAccessException" oluşturulacak.
-            throw new RuntimeException("Yetkisiz işlem: Bu tweet'i silme yetkiniz yok.");
+            // RuntimeException yerine artık kendi özel yetki hatamızı fırlatıyoruz.
+            throw new TwitterAuthException("Yetkisiz işlem: Bu tweet'i silme yetkiniz yok.");
         }
         tweetRepository.delete(tweetToDelete);
     }

@@ -3,10 +3,11 @@ package com.workintech.twitterapi.service;
 import com.workintech.twitterapi.entity.Like;
 import com.workintech.twitterapi.entity.Tweet;
 import com.workintech.twitterapi.entity.User;
+import com.workintech.twitterapi.exception.LikeNotFoundException;
+import com.workintech.twitterapi.exception.TwitterConflictException;
+import com.workintech.twitterapi.exception.UserNotFoundException;
 import com.workintech.twitterapi.repository.LikeRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class LikeServiceImpl implements LikeService {
@@ -24,11 +25,14 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public Like save(String username, Long tweetId) {
         User user = userService.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı: " + username));
+                // RuntimeException yerine artık kendi özel hatamızı fırlatıyoruz.
+                .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + username));
         Tweet tweet = tweetService.getById(tweetId);
 
+        // Kural: Bir kullanıcı aynı tweet'i tekrar beğenemez.
         if (likeRepository.existsByTweetIdAndUserId(tweetId, user.getId())) {
-            throw new RuntimeException("Bu tweet zaten bu kullanıcı tarafından beğenilmiş.");
+            // RuntimeException yerine artık kendi özel çakışma hatamızı fırlatıyoruz.
+            throw new TwitterConflictException("Bu tweet zaten bu kullanıcı tarafından beğenilmiş.");
         }
 
         Like newLike = new Like();
@@ -40,10 +44,10 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public void delete(String username, Long tweetId) {
         User user = userService.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı: " + username));
+                .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + username));
 
         Like likeToDelete = likeRepository.findByTweetIdAndUserId(tweetId, user.getId())
-                .orElseThrow(() -> new RuntimeException("Beğeni kaydı bulunamadı."));
+                .orElseThrow(() -> new LikeNotFoundException("Beğeni kaydı bulunamadı."));
 
         likeRepository.delete(likeToDelete);
     }

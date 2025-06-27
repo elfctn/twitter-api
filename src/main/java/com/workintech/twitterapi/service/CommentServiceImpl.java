@@ -4,11 +4,13 @@ import com.workintech.twitterapi.dto.CommentCreateDTO;
 import com.workintech.twitterapi.entity.Comment;
 import com.workintech.twitterapi.entity.Tweet;
 import com.workintech.twitterapi.entity.User;
+import com.workintech.twitterapi.exception.CommentNotFoundException;
+import com.workintech.twitterapi.exception.TwitterAuthException;
+import com.workintech.twitterapi.exception.UserNotFoundException;
 import com.workintech.twitterapi.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -25,7 +27,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment save(Long tweetId, String username, CommentCreateDTO commentCreateDTO) {
         User user = userService.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı: " + username));
+                // RuntimeException yerine artık kendi özel hatamızı fırlatıyoruz.
+                .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + username));
         Tweet tweet = tweetService.getById(tweetId);
 
         Comment comment = new Comment();
@@ -43,14 +46,17 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment getById(Long id) {
         return commentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Yorum bulunamadı: " + id));
+                .orElseThrow(() -> new CommentNotFoundException("Yorum bulunamadı: " + id));
     }
 
     @Override
     public Comment update(Long id, String username, CommentCreateDTO commentCreateDTO) {
         Comment commentToUpdate = getById(id);
+
+        // Güvenlik Kuralı: Yorumu sadece sahibi güncelleyebilir.
         if (!commentToUpdate.getUser().getUsername().equals(username)) {
-            throw new RuntimeException("Yetkisiz işlem: Bu yorumu güncelleme yetkiniz yok.");
+            // RuntimeException yerine artık kendi özel yetki hatamızı fırlatıyoruz.
+            throw new TwitterAuthException("Yetkisiz işlem: Bu yorumu güncelleme yetkiniz yok.");
         }
         commentToUpdate.setContent(commentCreateDTO.getContent());
         return commentRepository.save(commentToUpdate);
@@ -59,15 +65,18 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void delete(Long id, String username) {
         Comment commentToDelete = getById(id);
+
+        // Bu kullanıcı adının var olduğunu garantilemek için bir kontrol.
         User user = userService.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı: " + username));
+                .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + username));
 
         // Proje İsteri: "Yorumu sadece tweet sahibi veya yorum sahibi silebilmelidir."
         boolean isCommentOwner = commentToDelete.getUser().getUsername().equals(username);
         boolean isTweetOwner = commentToDelete.getTweet().getUser().getUsername().equals(username);
 
         if (!isCommentOwner && !isTweetOwner) {
-            throw new RuntimeException("Yetkisiz işlem: Bu yorumu silme yetkiniz yok.");
+            // RuntimeException yerine artık kendi özel yetki hatamızı fırlatıyoruz.
+            throw new TwitterAuthException("Yetkisiz işlem: Bu yorumu silme yetkiniz yok.");
         }
 
         commentRepository.delete(commentToDelete);
