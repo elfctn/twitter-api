@@ -10,11 +10,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
 }
 
 
+
+// SQL sorgu karşılığı; SELECT * FROM "User" WHERE username =??
+
+
 //    /register endpointi için -----JpaRepository save(User user) hediye eder
-
-
 //    /login    endpointi----- yukarıdaki metoduu kullanır
+
+
 // optional var ya da yok döner içi boş optional kutusu
 //.isPresent(), .orElseThrow() gibi metotları kullanarız
 // bu durumu kontrol etmeye zorlar
 // NullPointerException riskini ortadan kaldırır
+
+
