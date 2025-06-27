@@ -1,9 +1,8 @@
 package com.workintech.twitterapi.service;
 
-import com.workintech.twitterapi.dto.UserDTO;
+import com.workintech.twitterapi.dto.UserCreateDTO;
 import com.workintech.twitterapi.entity.User;
 import com.workintech.twitterapi.repository.UserRepository;
-import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +21,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(UserDTO userDTO) {
+    public User register(UserCreateDTO userCreateDTO) {
         // 2. DTO Kullanımı: Dışarıdan gelen veriyi temiz bir DTO ile alıyorum.
         User user = new User();
-        user.setUsername(userDTO.getUsername());
+        user.setUsername(userCreateDTO.getUsername());
         // 3. Şifreleme: Şifreyi her zaman encode ederek veritabanına kaydediyorum
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setEmail(userDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(userCreateDTO.getPassword()));
+        user.setEmail(userCreateDTO.getEmail());
         return userRepository.save(user);
     }
 
