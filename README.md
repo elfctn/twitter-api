@@ -1,17 +1,20 @@
-This project is a comprehensive backend API for a Twitter clone application, built with the Spring Boot framework. It provides a complete set of RESTful endpoints for user management, tweet creation, and interactions like commenting, liking, and retweeting, all secured with JWT-based authentication.
+Twitter Clone API
+This project is a comprehensive backend API for a Twitter clone application, built with Spring Boot. It offers RESTful endpoints for user management, tweet creation, and interactions like commenting, liking, and retweeting — all secured with JWT-based authentication.
 
-This API is designed following a layered architecture to ensure a clean separation of concerns, making the codebase maintainable, scalable, and testable.
+🔍 About The Project
+This API is built using a layered architecture to ensure maintainability, scalability, and testability.
 
-Controller Layer: Handles incoming HTTP requests and responses.
+Controller Layer: Handles HTTP requests and responses.
 
-Service Layer: Contains all the business logic and rules.
+Service Layer: Encapsulates business logic.
 
-Repository Layer: Manages all database interactions using Spring Data JPA.
+Repository Layer: Manages data access with Spring Data JPA.
 
-Security: Handles authentication and authorization using Spring Security and JSON Web Tokens (JWT).
+Security: Handles JWT-based authentication and authorization using Spring Security.
 
-Mappers & DTOs: Uses DTOs (Data Transfer Objects) and MapStruct for secure and efficient data transfer between layers.
+DTOs & Mappers: Uses MapStruct and DTOs for efficient data transfer.
 
+⚙️ Built With
 Spring Boot
 
 Spring Security
@@ -22,36 +25,51 @@ PostgreSQL
 
 Maven
 
-JWT (jjwt library)
+JWT (jjwt)
 
 MapStruct
 
 Lombok
 
-To get a local copy up and running, follow these simple steps.
-
-Prerequisites
-Java 17 or higher
+🚀 Getting Started
+✅ Prerequisites
+Java 17+
 
 Maven 3.x
 
 PostgreSQL running locally
 
+📥 Installation
+bash
+Kopyala
+Düzenle
+git clone https://github.com/your_username/twitter-api.git
+cd twitter-api
+Update your PostgreSQL credentials in src/main/resources/application.properties.
 
-Bu proje, Spring Boot çatısı kullanılarak geliştirilmiş, kapsamlı bir Twitter klonu uygulaması için backend API'sidir. JWT tabanlı kimlik doğrulama ile güvence altına alınmış kullanıcı yönetimi, tweet oluşturma ve yorum yapma, beğenme, retweetleme gibi etkileşimler için eksiksiz bir RESTful endpoint seti sunar.
+bash
+Kopyala
+Düzenle
+mvn clean install
+java -jar target/twitterapi-0.0.1-SNAPSHOT.jar
+📄 README.md (Türkçe)
+Twitter Klonu API
+Bu proje, Spring Boot ile geliştirilen kapsamlı bir Twitter klonu backend API'sidir. JWT tabanlı güvenlik ile korunmuş kullanıcı yönetimi, tweet oluşturma, yorum yapma, beğeni ve retweet gibi işlemleri gerçekleştirmek için RESTful servisler sunar.
 
-Bu API, Sorumlulukların Ayrılığı (Separation of Concerns) ilkesini sağlamak, kod tabanını sürdürülebilir, ölçeklenebilir ve test edilebilir kılmak amacıyla katmanlı bir mimariyi takip ederek tasarlanmıştır.
+🔍 Proje Hakkında
+Bu API, katmanlı mimari prensibi ile yapılandırılmıştır.
 
-Controller Katmanı: Gelen HTTP isteklerini ve yanıtlarını yönetir.
+Controller Katmanı: HTTP isteklerini ve yanıtlarını yönetir.
 
-Service Katmanı: Tüm iş mantığını ve kurallarını içerir.
+Service Katmanı: İş kurallarını ve mantığını içerir.
 
-Repository Katmanı: Spring Data JPA kullanarak tüm veritabanı etkileşimlerini yönetir.
+Repository Katmanı: Veritabanı işlemlerini Spring Data JPA ile yürütür.
 
-Güvenlik: Spring Security ve JSON Web Token (JWT) kullanarak kimlik doğrulama ve yetkilendirme işlemlerini yürütür.
+Güvenlik: JWT ve Spring Security ile kimlik doğrulama ve yetkilendirme sağlar.
 
-Mapper & DTO'lar: Katmanlar arasında güvenli ve verimli veri aktarımı için DTO'lar (Veri Taşıma Nesneleri) ve MapStruct kullanır.
+DTO & Mapper: Veri aktarımında MapStruct ve DTO yapısı kullanır.
 
+⚙️ Kullanılan Teknolojiler
 Spring Boot
 
 Spring Security
@@ -62,18 +80,30 @@ PostgreSQL
 
 Maven
 
-JWT (jjwt kütüphanesi)
+JWT (jjwt)
 
 MapStruct
 
 Lombok
 
-Projeyi yerel makinenizde çalıştırmak için aşağıdaki basit adımları izleyin.
-
-Gereksinimler
-Java 17 veya üstü
+🚀 Başlarken
+✅ Gereksinimler
+Java 17 veya üzeri
 
 Maven 3.x
 
-Yerel olarak çalışan PostgreSQL
+Yerel PostgreSQL sunucusu
 
+📥 Kurulum
+bash
+Kopyala
+Düzenle
+git clone https://github.com/kullanici_adiniz/twitter-api.git
+cd twitter-api
+application.properties dosyasındaki veritabanı bilgilerini kendi bilgilerinizle değiştirin.
+
+bash
+Kopyala
+Düzenle
+mvn clean install
+java -jar target/twitterapi-0.0.1-SNAPSHOT.jar
