@@ -39,20 +39,8 @@ Maven 3.x
 
 PostgreSQL running locally
 
-📥 Installation
-bash
-Kopyala
-Düzenle
-git clone https://github.com/your_username/twitter-api.git
-cd twitter-api
-Update your PostgreSQL credentials in src/main/resources/application.properties.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-bash
-Kopyala
-Düzenle
-mvn clean install
-java -jar target/twitterapi-0.0.1-SNAPSHOT.jar
-📄 README.md (Türkçe)
 Twitter Klonu API
 Bu proje, Spring Boot ile geliştirilen kapsamlı bir Twitter klonu backend API'sidir. JWT tabanlı güvenlik ile korunmuş kullanıcı yönetimi, tweet oluşturma, yorum yapma, beğeni ve retweet gibi işlemleri gerçekleştirmek için RESTful servisler sunar.
 
@@ -94,16 +82,3 @@ Maven 3.x
 
 Yerel PostgreSQL sunucusu
 
-📥 Kurulum
-bash
-Kopyala
-Düzenle
-git clone https://github.com/kullanici_adiniz/twitter-api.git
-cd twitter-api
-application.properties dosyasındaki veritabanı bilgilerini kendi bilgilerinizle değiştirin.
-
-bash
-Kopyala
-Düzenle
-mvn clean install
-java -jar target/twitterapi-0.0.1-SNAPSHOT.jar
