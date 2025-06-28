@@ -5,12 +5,11 @@ import com.workintech.twitterapi.entity.Retweet;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+// UserMapper'ı kullanarak iç içe nesne dönüşümünü sağlıyoruz.
+@Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface RetweetMapper {
 
-    // MapStruct'a, entity'deki alanları DTO'daki alanlara nasıl
-    // eşleştireceğini @Mapping anotasyonları ile söylüyoruz.
-    @Mapping(source = "user.id", target = "userId")
+    // Hedef DTO'da "tweetId" alanı olduğu için bu eşleştirme doğru.
     @Mapping(source = "tweet.id", target = "tweetId")
     RetweetResponseDTO retweetToRetweetResponseDTO(Retweet retweet);
 }

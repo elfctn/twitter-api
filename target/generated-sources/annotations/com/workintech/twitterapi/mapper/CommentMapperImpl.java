@@ -3,19 +3,22 @@ package com.workintech.twitterapi.mapper;
 import com.workintech.twitterapi.dto.CommentResponseDTO;
 import com.workintech.twitterapi.entity.Comment;
 import com.workintech.twitterapi.entity.Tweet;
-import com.workintech.twitterapi.entity.User;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-28T17:11:38+0300",
+    date = "2025-06-28T19:02:43+0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (Oracle Corporation)"
 )
 @Component
 public class CommentMapperImpl implements CommentMapper {
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public CommentResponseDTO commentToCommentResponseDTO(Comment comment) {
@@ -29,7 +32,7 @@ public class CommentMapperImpl implements CommentMapper {
         commentResponseDTO.setId( comment.getId() );
         commentResponseDTO.setContent( comment.getContent() );
         commentResponseDTO.setCreatedAt( comment.getCreatedAt() );
-        commentResponseDTO.setUser( userToUserSummaryDTO( comment.getUser() ) );
+        commentResponseDTO.setUser( userMapper.userToUserSummaryDTO( comment.getUser() ) );
 
         return commentResponseDTO;
     }
@@ -61,21 +64,5 @@ public class CommentMapperImpl implements CommentMapper {
             return null;
         }
         return id;
-    }
-
-    protected CommentResponseDTO.UserSummaryDTO userToUserSummaryDTO(User user) {
-        if ( user == null ) {
-            return null;
-        }
-
-        Long id = null;
-        String username = null;
-
-        id = user.getId();
-        username = user.getUsername();
-
-        CommentResponseDTO.UserSummaryDTO userSummaryDTO = new CommentResponseDTO.UserSummaryDTO( id, username );
-
-        return userSummaryDTO;
     }
 }

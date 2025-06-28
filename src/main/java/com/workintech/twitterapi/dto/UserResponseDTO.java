@@ -31,4 +31,6 @@ public class UserResponseDTO {
             this.content = content;
         }
     }
+
+
 }

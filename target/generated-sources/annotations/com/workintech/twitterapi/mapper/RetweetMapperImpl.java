@@ -3,17 +3,20 @@ package com.workintech.twitterapi.mapper;
 import com.workintech.twitterapi.dto.RetweetResponseDTO;
 import com.workintech.twitterapi.entity.Retweet;
 import com.workintech.twitterapi.entity.Tweet;
-import com.workintech.twitterapi.entity.User;
 import javax.annotation.processing.Generated;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-28T17:11:38+0300",
+    date = "2025-06-28T19:02:43+0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (Oracle Corporation)"
 )
 @Component
 public class RetweetMapperImpl implements RetweetMapper {
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public RetweetResponseDTO retweetToRetweetResponseDTO(Retweet retweet) {
@@ -23,27 +26,12 @@ public class RetweetMapperImpl implements RetweetMapper {
 
         RetweetResponseDTO retweetResponseDTO = new RetweetResponseDTO();
 
-        retweetResponseDTO.setUserId( retweetUserId( retweet ) );
         retweetResponseDTO.setTweetId( retweetTweetId( retweet ) );
         retweetResponseDTO.setId( retweet.getId() );
+        retweetResponseDTO.setUser( userMapper.userToUserSummaryDTO( retweet.getUser() ) );
         retweetResponseDTO.setCreatedAt( retweet.getCreatedAt() );
 
         return retweetResponseDTO;
-    }
-
-    private Long retweetUserId(Retweet retweet) {
-        if ( retweet == null ) {
-            return null;
-        }
-        User user = retweet.getUser();
-        if ( user == null ) {
-            return null;
-        }
-        Long id = user.getId();
-        if ( id == null ) {
-            return null;
-        }
-        return id;
     }
 
     private Long retweetTweetId(Retweet retweet) {

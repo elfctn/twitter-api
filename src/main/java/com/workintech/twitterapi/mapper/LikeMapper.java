@@ -8,8 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface LikeMapper {
 
-    // MapStruct'a, entity'deki alanları DTO'daki alanlara nasıl
-    // eşleştireceğini @Mapping anotasyonları ile söylüyoruz.
+    // Hatanın çözümü için DTO'daki alanlarla tam eşleşme sağlıyoruz.
     @Mapping(source = "id", target = "likeId")
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "tweet.id", target = "tweetId")

@@ -1,15 +1,11 @@
 package com.workintech.twitterapi.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
 import java.time.LocalDateTime;
+import java.util.List;
 
-/**
- * Bu DTO, bir tweet'in detaylarını API yanıtı olarak dışarıya göndermek için kullanılır.
- * Entity'nin kendisini değil, sadece gerekli ve güvenli olan verileri içerir.
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,18 +13,11 @@ public class TweetResponseDTO {
     private Long id;
     private String content;
     private LocalDateTime createdAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
+    // Artık bağımsız olan UserSummaryDTO'yu kullanıyor.
     private UserSummaryDTO user;
-
-    /**
-     * Tweet'i atan kullanıcının sadece temel bilgilerini içeren iç içe bir DTO.
-     * Bu, kullanıcının şifresi gibi hassas bilgilerin sızmasını engeller.
-     */
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class UserSummaryDTO {
-        private Long id;
-        private String username;
-    }
+    private List<CommentResponseDTO> comments;
+    private List<LikeResponseDTO> likes;
+    private List<RetweetResponseDTO> retweets;
+    // İçindeki 'static class UserSummaryDTO' tanımı SİLİNDİ.
 }

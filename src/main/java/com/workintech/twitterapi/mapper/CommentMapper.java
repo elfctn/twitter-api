@@ -7,11 +7,10 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+// ÇÖZÜM: 'uses' parametresi ile UserMapper'ı kullanmasını söylüyoruz.
+@Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface CommentMapper {
 
-    // MapStruct'a, Comment entity'sindeki 'tweet.id' alanını,
-    // CommentResponseDTO'daki 'tweetId' alanına eşlemesini söylüyoruz.
     @Mapping(source = "tweet.id", target = "tweetId")
     CommentResponseDTO commentToCommentResponseDTO(Comment comment);
 

@@ -11,4 +11,5 @@ public class LikeResponseDTO {
     private Long likeId;
     private Long userId;
     private Long tweetId;
+    private UserSummaryDTO user;
 }

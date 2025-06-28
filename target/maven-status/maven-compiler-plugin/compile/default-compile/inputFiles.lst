@@ -42,6 +42,7 @@
 /Users/elifcetin/projects/myprojects/twitter-api/src/main/java/com/workintech/twitterapi/dto/RetweetResponseDTO.java
 /Users/elifcetin/projects/myprojects/twitter-api/src/main/java/com/workintech/twitterapi/dto/LikeResponseDTO.java
 /Users/elifcetin/projects/myprojects/twitter-api/src/main/java/com/workintech/twitterapi/service/RetweetServiceImpl.java
+/Users/elifcetin/projects/myprojects/twitter-api/src/main/java/com/workintech/twitterapi/dto/UserSummaryDTO.java
 /Users/elifcetin/projects/myprojects/twitter-api/src/main/java/com/workintech/twitterapi/controller/RetweetController.java
 /Users/elifcetin/projects/myprojects/twitter-api/src/main/java/com/workintech/twitterapi/dto/LikeCountResponseDTO.java
 /Users/elifcetin/projects/myprojects/twitter-api/src/main/java/com/workintech/twitterapi/service/TokenServiceImpl.java
