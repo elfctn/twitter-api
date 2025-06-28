@@ -1,4 +1,4 @@
-Twitter Clone API
+--Twitter Clone API--
 This project is a comprehensive backend API for a Twitter clone application, built with the Spring Boot framework. It provides a complete set of RESTful endpoints for user management, tweet creation, and interactions like commenting, liking, and retweeting, all secured with JWT-based authentication.
 
 About The Project
@@ -43,7 +43,7 @@ PostgreSQL running locally
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-Twitter Klonu API
+-- Twitter Klonu API --
 Bu proje, Spring Boot çatısı kullanılarak geliştirilmiş, kapsamlı bir Twitter klonu uygulaması için backend API'sidir. JWT tabanlı kimlik doğrulama ile güvence altına alınmış kullanıcı yönetimi, tweet oluşturma ve yorum yapma, beğenme, retweetleme gibi etkileşimler için eksiksiz bir RESTful endpoint seti sunar.
 
 Proje Hakkında
