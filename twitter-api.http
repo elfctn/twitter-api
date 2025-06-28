@@ -1,9 +1,22 @@
 ### ===================================================
 ### TWITTER API - UÇTAN UCA TEST SENARYOSU
 ### ===================================================
+
+### ===================================================
+### ADIM -1: VERİTABANINI SIFIRLAMA (Her Testten Önce)
+### ===================================================
+#
+# AŞAĞIDAKİ SQL KOMUTUNU pgAdmin GİBİ BİR VERİTABANI ARACINDA ÇALIŞTIR.
+# Bu komut, tüm tablolardaki verileri siler ve ID sayaçlarını sıfırlar.
+# Böylece her yeni test seansına, ilk kullanıcı ID'si 1 olacak şekilde başlarsın.
+#
+# TRUNCATE TABLE "retweet", "like", "comment", "tweet", "user" RESTART IDENTITY CASCADE;
+#
+### ===================================================
+
 # Bu dosya, projenin tüm endpoint'lerini test etmek için kullanılır.
 # Testlere başlamadan önce, veritabanının boş olduğundan
-# (TRUNCATE komutu ile) ve backend sunucusunun çalıştığından emin ol.
+# (yukarıdaki TRUNCATE komutu ile) ve backend sunucusunun çalıştığından emin ol.
 # İstekleri yukarıdan aşağıya doğru sırayla çalıştır.
 
 ### --- Değişken Tanımlamaları ---
