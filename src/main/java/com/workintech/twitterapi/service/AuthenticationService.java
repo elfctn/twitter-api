@@ -9,3 +9,4 @@ public interface AuthenticationService {
     // Yeni eklenen metot: LoginRequestDTO alıp, JWT string'i döndürecek.
     String login(LoginRequestDTO loginRequestDTO);
 }
+// Kayıt (register) sorumluluğu

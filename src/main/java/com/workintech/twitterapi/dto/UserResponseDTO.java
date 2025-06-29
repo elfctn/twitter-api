@@ -7,7 +7,6 @@ import java.util.List;
 
 /**
  * Bir kullanıcı hakkındaki genel bilgileri ve tweet özetlerini içeren DTO.
- * Şifre gibi hassas veriler dışarıya sızdırılmaz.
  */
 @Data
 @NoArgsConstructor
@@ -16,6 +15,8 @@ public class UserResponseDTO {
     private String username;
     private String email;
     private List<TweetSummaryDTO> tweets;
+
+
 
     /**
      * Kullanıcının tweet'lerinin sadece ID ve içeriğini gösteren özet DTO.
@@ -34,3 +35,4 @@ public class UserResponseDTO {
 
 
 }
+//registten sonra user sayfasında görünenler

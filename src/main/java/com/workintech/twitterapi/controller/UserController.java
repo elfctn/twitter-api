@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/users") // RESTful standartları için çoğul isim kullanmak daha yaygındır.
+@RequestMapping("/users") // RESTful standartları için çoğul isim
 public class UserController {
 
     private final UserService userService;

@@ -7,17 +7,20 @@ import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
-    Optional<Like> findByTweetIdAndUserId(Long tweetId, Long userId);
+    boolean existsByTweetIdAndUserId(Long tweetId, Long userId); //like zaten var mı yok mu -kontrol- hızlı
+    Optional<Like> findByTweetIdAndUserId(Long tweetId, Long userId); //twetid ve userid göre like ara
 
-    boolean existsByTweetIdAndUserId(Long tweetId, Long userId);
 }
 
 
-// Like-dislike olayları--//NullPointerException riskine karşı optional
+//ayrıca boolean;
+// Likeı geri almak işlemi için silinecek olan o spesifik Like kaydını
+// veritabanından bulmamı da sağlayacak
 
-//like kaydı eklendi bir de kullanıcı tweete daha önce likelamış mı
-// bunun kontrolü için boolean özel sorgu verildi
-//service katmanında kontrolü yapacağım
+
+
+
+
 
 
 

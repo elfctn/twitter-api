@@ -24,3 +24,6 @@ public class UserCreateDTO {
     @Email(message = "Lütfen geçerli bir email adresi giriniz")
     private String email;
 }
+
+
+//regist olurken istenilenler

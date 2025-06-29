@@ -3,10 +3,15 @@ package com.workintech.twitterapi.service;
 import com.workintech.twitterapi.entity.User;
 import java.util.Optional;
 
-// Artık bu servisin görevi sadece mevcut kullanıcıları bulmak.
-// Kayıt (register) sorumluluğu AuthenticationService'e geçti.
+
+
 public interface UserService {
-    Optional<User> findByUsername(String username);
-    User getById(Long id);
-    //register metodu buradan kaldırıldı.
+    Optional<User> findByUsername(String username);//Kullanıcı varsa getir yosa boş dön
+    User getById(Long id);// olduğu zaman ID ile getir --yoksa exception fırlatacak
 }
+
+
+
+
+// bu arayüz, userserviceimpl sınıfında yapılacak işi hangş kurala göre yapacak onu belirledi
+// controller sadece buraya bakacak. işlemler userserviceimpl sınıfında olacak

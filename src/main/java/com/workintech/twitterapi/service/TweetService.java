@@ -10,9 +10,6 @@ public interface TweetService {
     List<Tweet> getAll();
     Tweet getById(Long id);
     List<Tweet> getByUserId(Long userId);
-
-    // Güncelleme işlemi için 'username' parametresi eklendi.
     Tweet update(Long id, TweetCreateDTO tweetCreateDTO, String username);
-
     void delete(Long id, String username);
 }

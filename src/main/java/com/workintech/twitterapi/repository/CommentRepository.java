@@ -6,8 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByTweetId(Long tweetId);
+    List<Comment> findByTweetId(Long tweetId); // tweetid ye göre ara yorumları listele
 }
+
+
+
+
 
 
 
@@ -15,8 +19,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 //SQL sorgusu karşılığı: SELECT * FROM comment WHERE tweet_id = ?
 
 
-//yazılan metod temel save, findById, delete gibi işlemleri
-// jpa dan getiriyo direkt olarak
-//tüm comment CRUD (Oluşturma, Güncelleme, Silme) endpointleri hepsi halloluyor
-//hatta dolaylı yoldan tweet/findbyid(get) bile oluyor
-// çünkü tüm bilgileri getirmek isteniyor
+//hatta dolaylı yoldan tweet/findbyid(get) endpointini bile karşılıyor

@@ -10,9 +10,9 @@ import java.time.LocalDateTime; // Tarih ve saat için import
 import java.util.ArrayList;
 import java.util.List;
 
-@Data // Getter, Setter, toString, equals, hashCode otomatik oluşturur
+@Data
 @AllArgsConstructor
-@NoArgsConstructor // Parametresiz constructor oluşturur (Lombok tarafından)
+@NoArgsConstructor
 @Entity
 @Table(name = "\"User\"", schema = "public") // Veritabanı tablo adı ve şema
 public class User {
@@ -50,7 +50,7 @@ public class User {
     @JsonManagedReference(value = "user-retweets")
     private List<Retweet> retweets = new ArrayList<>();
 
-    @PrePersist // Kaydetme işleminden önce çalışır
+    @PrePersist // Kaydetme işleminden önce çalışır, kaydın oluşturulma zamanı otomatik olarak ayarlan
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }

@@ -19,5 +19,5 @@ public class TweetResponseDTO {
     private List<CommentResponseDTO> comments;
     private List<LikeResponseDTO> likes;
     private List<RetweetResponseDTO> retweets;
-    // İçindeki 'static class UserSummaryDTO' tanımı SİLİNDİ.
+
 }

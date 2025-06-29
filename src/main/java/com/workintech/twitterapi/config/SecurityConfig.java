@@ -49,6 +49,7 @@ public class SecurityConfig {
         return http
                 // YENİ EKLENEN SATIR: Tanımladığımız CORS ayarlarını kullanmasını söylüyoruz.
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {

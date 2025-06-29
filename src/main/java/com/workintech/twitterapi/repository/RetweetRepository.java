@@ -7,16 +7,14 @@ import java.util.Optional;
 
 public interface RetweetRepository extends JpaRepository<Retweet, Long> {
 
-    boolean existsByTweetIdAndUserId(Long tweetId, Long userId);
+    boolean existsByTweetIdAndUserId(Long tweetId, Long userId);// tweetid ve userid ye göre kontrol et
+                                                                // daha önce rt yapılmış mı
 
     Optional<Retweet> findByTweetIdAndUserId(Long tweetId, Long userId);
 
 
 }
 
-//"Retweetle" işlemi öncesinde, kullanıcının aynı tweeti
-// daha önce retweetleyip retweetlemediğini kontrol
-
-//Retweeti geri almak işlemi için
-// silinecek olan o spesifik Retweet kaydını
-// veritabanından bulmamı sağlayacak
+//ayrıca boolean;
+// Retweeti geri almak işlemi için silinecek olan o spesifik Retweet kaydını
+// veritabanından bulmamı da sağlayacak

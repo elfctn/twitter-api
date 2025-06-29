@@ -31,19 +31,19 @@ public class Tweet {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+    @JsonBackReference //json'a dahil EDILMEZ
     private User user;
 
     @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "tweet-comments")
+    @JsonManagedReference(value = "tweet-comments")//json'a dahil edilir
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "tweet-likes")
+    @JsonManagedReference(value = "tweet-likes")//json'a dahil edilir
     private List<Like> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "tweet-retweets")
+    @JsonManagedReference(value = "tweet-retweets") //json'a dahil edilir
     private List<Retweet> retweets = new ArrayList<>();
 
     @Column(name="created_at")
@@ -62,4 +62,10 @@ public class Tweet {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    //@CreationTimestamp
+    //private LocalDateTime createdAt;
+    //
+    //@UpdateTimestamp
+    //private LocalDateTime updatedAt;
 }
