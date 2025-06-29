@@ -7,9 +7,7 @@ import java.util.Optional;
 
 public interface RetweetRepository extends JpaRepository<Retweet, Long> {
 
-    boolean existsByTweetIdAndUserId(Long tweetId, Long userId);// tweetid ve userid ye göre kontrol et
-                                                                // daha önce rt yapılmış mı
-
+    boolean existsByTweetIdAndUserId(Long tweetId, Long userId);//daha önce rt yapılmış mı  tweetid ve userid ye göre kontrol et
     Optional<Retweet> findByTweetIdAndUserId(Long tweetId, Long userId);
 
 

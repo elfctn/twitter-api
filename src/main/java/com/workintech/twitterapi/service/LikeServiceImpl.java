@@ -22,18 +22,20 @@ public class LikeServiceImpl implements LikeService {
         this.tweetService = tweetService;
     }
 
+
+
     @Override
     public Like save(String username, Long tweetId) {
         User user = userService.findByUsername(username)
-                // RuntimeException yerine artık kendi özel hatamızı fırlatıyoruz.
                 .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + username));
         Tweet tweet = tweetService.getById(tweetId);
 
-        // Kural: Bir kullanıcı aynı tweet'i tekrar beğenemez.
+
+        // Bir kullanıcı aynı tweet'i tekrar beğenemez.
         if (likeRepository.existsByTweetIdAndUserId(tweetId, user.getId())) {
-            // RuntimeException yerine artık kendi özel çakışma hatamızı fırlatıyoruz.
             throw new TwitterConflictException("Bu tweet zaten bu kullanıcı tarafından beğenilmiş.");
         }
+
 
         Like newLike = new Like();
         newLike.setUser(user);
@@ -46,11 +48,14 @@ public class LikeServiceImpl implements LikeService {
         User user = userService.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + username));
 
+
         Like likeToDelete = likeRepository.findByTweetIdAndUserId(tweetId, user.getId())
                 .orElseThrow(() -> new LikeNotFoundException("Beğeni kaydı bulunamadı."));
-
         likeRepository.delete(likeToDelete);
     }
+
+
+
 
     @Override
     public int getLikeCount(Long tweetId) {

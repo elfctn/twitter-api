@@ -16,4 +16,3 @@ public interface TweetRepository extends JpaRepository<Tweet, Long> {
 
 
 // SQL sorgu karşılığı: SELECT * FROM tweet WHERE user_id = ???
-///  tweet/findByUserId endpoint'ini karşılayacak

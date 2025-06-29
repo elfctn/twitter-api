@@ -25,6 +25,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.tokenService = tokenService;
     }
 
+
+
     @Override
     public User register(UserCreateDTO userCreateDTO) {
         User user = new User();
@@ -34,13 +36,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userRepository.save(user);
     }
 
+
+
     @Override
     public String login(LoginRequestDTO loginRequestDTO) {
-        // Spring Security'nin kimlik doğrulama mekanizmasını tetikliyoruz.
+        // Spring Security' kimlik doğrulama mekanizmasını tetikle
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword())
         );
-
         // Kimlik doğrulama başarılıysa, TokenService'i kullanarak bir JWT üretiyoruz.
         return tokenService.generateToken(authentication);
     }

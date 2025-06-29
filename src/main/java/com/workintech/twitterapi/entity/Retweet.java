@@ -25,7 +25,7 @@ public class Retweet {
     private Tweet tweet;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id") // retweet kolonu hangi usera ait (foregn key = rt tablosunda))
     @JsonBackReference(value = "user-retweets")
     private User user;
 

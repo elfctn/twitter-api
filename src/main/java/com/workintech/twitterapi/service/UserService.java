@@ -12,6 +12,3 @@ public interface UserService {
 
 
 
-
-// bu arayüz, userserviceimpl sınıfında yapılacak işi hangş kurala göre yapacak onu belirledi
-// controller sadece buraya bakacak. işlemler userserviceimpl sınıfında olacak

@@ -8,18 +8,9 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    /**
-     * Bu metot, UserController'ın ihtiyacını karşılamak için User entity'sini,
-     * tweet listesini de içeren tam UserResponseDTO'ya çevirir.
-     * MapStruct, alan isimleri eşleştiği için (tweets -> tweets) iç içe listeyi
-     * otomatik olarak dönüştürecektir.
-     */
+    //user entitysini al userResponsedto ya cevir ----controller için
     UserResponseDTO userToUserResponseDTO(User user);
 
-    /**
-     * Bu metot, diğer mapper'ların (TweetMapper, CommentMapper vb.)
-     * ihtiyacını karşılamak için User entity'sini, sadece temel bilgileri
-     * içeren UserSummaryDTO'ya çevirir.
-     */
+    //user entitysini al usersumdto ya cevir ----controller için
     UserSummaryDTO userToUserSummaryDTO(User user);
 }

@@ -27,6 +27,3 @@ public class UserServiceImpl implements UserService {
     }
 }
 
-//gerçek kod burada
-// direkt burası repostorye bağlı
-// interface sadece kuralını koydu

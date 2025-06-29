@@ -11,6 +11,5 @@ import java.util.List;
 public interface TweetMapper {
 
     TweetResponseDTO tweetToTweetResponseDTO(Tweet tweet);
-
     List<TweetResponseDTO> tweetListToTweetResponseDTOList(List<Tweet> tweets);
 }

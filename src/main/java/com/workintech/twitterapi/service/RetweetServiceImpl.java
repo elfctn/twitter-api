@@ -23,38 +23,38 @@ public class RetweetServiceImpl implements RetweetService {
         this.tweetService = tweetService;
     }
 
+
+
     @Override
     public Retweet save(String username, Long tweetId) {
         User user = userService.findByUsername(username)
-                // RuntimeException yerine artık kendi özel hatamızı fırlatıyoruz.
                 .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + username));
         Tweet tweet = tweetService.getById(tweetId);
-
-        // Kural: Bir kullanıcı aynı tweet'i tekrar retweetleyemez.
+        //  Bir kullanıcı aynı tweet'i tekrar retweetleyemez.
         if (retweetRepository.existsByTweetIdAndUserId(tweetId, user.getId())) {
-            // RuntimeException yerine artık kendi özel çakışma hatamızı fırlatıyoruz.
             throw new TwitterConflictException("Bu tweet zaten bu kullanıcı tarafından retweet edilmiş.");
         }
-
         Retweet newRetweet = new Retweet();
         newRetweet.setUser(user);
         newRetweet.setTweet(tweet);
         return retweetRepository.save(newRetweet);
     }
 
+
+
     @Override
     public void delete(Long retweetId, String username) {
         Retweet retweetToDelete = retweetRepository.findById(retweetId)
                 .orElseThrow(() -> new RetweetNotFoundException("Retweet kaydı bulunamadı."));
-
-        // Güvenlik Kuralı: Retweet'i sadece onu oluşturan kullanıcı silebilir.
+        //  Retweet'i sadece onu oluşturan kullanıcı silebilir.
         if (!retweetToDelete.getUser().getUsername().equals(username)) {
-            // RuntimeException yerine artık kendi özel yetki hatamızı fırlatıyoruz.
             throw new TwitterAuthException("Yetkisiz işlem: Bu retweet'i silme yetkiniz yok.");
         }
-
         retweetRepository.delete(retweetToDelete);
     }
+
+
+
 
     @Override
     public int getRetweetCount(Long tweetId) {

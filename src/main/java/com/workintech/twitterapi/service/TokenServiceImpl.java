@@ -12,43 +12,31 @@ import java.util.Date;
 
 @Service
 public class TokenServiceImpl implements TokenService {
-
-    // @Value: Spring'e, application.properties dosyasındaki değeri
-    // bu değişkene atamasını söyler.
+    // @Value: Spring'e, application.properties dosyasındaki değeri bu değişkene atamasını söyler.
     @Value("${jwt.secret}")
     private String secret;
-
     @Value("${jwt.expiration}")
     private Long expiration;
-
     private SecretKey secretKey;
 
-    // Bu metot, TokenService nesnesi oluşturulduktan hemen sonra
-    // Spring tarafından otomatik olarak çalıştırılır.
+    // Bu metot, TokenService nesnesi oluşturulduktan hemen sonra Spring tarafından otomatik olarak çalıştırılır.
     @jakarta.annotation.PostConstruct
     public void init() {
-        // application.properties'den aldığımız metin halindeki secret'ı,
-        // jjwt kütüphanesinin anlayacağı güvenli bir anahtar formatına çeviriyoruz.
-        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes()); // app.prop teki metin halindeki secretı jjwt ktph anlayacağı güvenli bir anahtar formatına çevir.
     }
+
+
+    
 
     @Override
     public String generateToken(Authentication authentication) {
-        // Kimliği doğrulanmış kullanıcının adını alıyoruz.
-        String username = authentication.getName();
-
-        // JWT'yi oluşturmaya başlıyoruz.
-        return Jwts.builder()
-                // "subject": Token'ın kiminle ilgili olduğunu belirtir (kullanıcı adı).
-                .setSubject(username)
-                // "issuedAt": Token'ın ne zaman oluşturulduğunu belirtir.
-                .setIssuedAt(new Date())
-                // "expiration": Token'ın ne zaman geçersiz olacağını belirtir.
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                // "signWith": Token'ı, bizim gizli anahtarımızla ve HS256 algoritmasıyla imzalıyoruz.
-                // Bu imza, token'ın yolda değiştirilmediğini garantiler.
-                .signWith(secretKey, SignatureAlgorithm.HS256)
-                // Son olarak, sıkıştırılmış ve güvenli token string'ini oluşturuyoruz.
-                .compact();
+        String username = authentication.getName();// Kimliği doğrulanmış kullanıcının adını al
+        return Jwts.builder()// JWT'yi oluşturmaya başla
+                .setSubject(username)// "subject": Token'ın kiminle ilgili olduğunu belir (kullanıcı adı).
+                .setIssuedAt(new Date())// "issuedAt": Token'ın ne zaman oluşturulduğunu belirt
+                .setExpiration(new Date(System.currentTimeMillis() + expiration)) // "expiration": Token'ın ne zaman geçersiz olacağını belirt
+                .signWith(secretKey, SignatureAlgorithm.HS256)// "signWith": Token'ı, bizim gizli anahtarımızla ve HS256 algoritmasıyla imzala
+                                                              // Bu imza, token'ın yolda değiştirilmediğini garantiler.
+                .compact();// Son olarak, sıkıştırılmış ve güvenli token stringini oluştur
     }
 }

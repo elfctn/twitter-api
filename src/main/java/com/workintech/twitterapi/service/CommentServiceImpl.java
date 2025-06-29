@@ -27,7 +27,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment save(Long tweetId, String username, CommentCreateDTO commentCreateDTO) {
         User user = userService.findByUsername(username)
-                // RuntimeException yerine artık kendi özel hatamızı fırlatıyoruz.
                 .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + username));
         Tweet tweet = tweetService.getById(tweetId);
 
@@ -43,24 +42,26 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findByTweetId(tweetId);
     }
 
+
     @Override
     public Comment getById(Long id) {
         return commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Yorum bulunamadı: " + id));
     }
 
+
+    // Yorumu sadece sahibi güncelleyebilir.
     @Override
     public Comment update(Long id, String username, CommentCreateDTO commentCreateDTO) {
         Comment commentToUpdate = getById(id);
-
-        // Güvenlik Kuralı: Yorumu sadece sahibi güncelleyebilir.
         if (!commentToUpdate.getUser().getUsername().equals(username)) {
-            // RuntimeException yerine artık kendi özel yetki hatamızı fırlatıyoruz.
             throw new TwitterAuthException("Yetkisiz işlem: Bu yorumu güncelleme yetkiniz yok.");
         }
         commentToUpdate.setContent(commentCreateDTO.getContent());
         return commentRepository.save(commentToUpdate);
     }
+
+
 
     @Override
     public void delete(Long id, String username) {
@@ -69,13 +70,10 @@ public class CommentServiceImpl implements CommentService {
         // Bu kullanıcı adının var olduğunu garantilemek için bir kontrol.
         User user = userService.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + username));
-
-        // Proje İsteri: "Yorumu sadece tweet sahibi veya yorum sahibi silebilmelidir."
+        // Yorumu sadece tweet sahibi veya yorum sahibi silebilmelidir.
         boolean isCommentOwner = commentToDelete.getUser().getUsername().equals(username);
         boolean isTweetOwner = commentToDelete.getTweet().getUser().getUsername().equals(username);
-
         if (!isCommentOwner && !isTweetOwner) {
-            // RuntimeException yerine artık kendi özel yetki hatamızı fırlatıyoruz.
             throw new TwitterAuthException("Yetkisiz işlem: Bu yorumu silme yetkiniz yok.");
         }
 

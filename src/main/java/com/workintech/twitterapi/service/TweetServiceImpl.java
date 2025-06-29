@@ -27,9 +27,7 @@ public class TweetServiceImpl implements TweetService {
     @Override
     public Tweet save(TweetCreateDTO tweetCreateDTO, String username) {
         User user = userService.findByUsername(username)
-                // RuntimeException yerine artık kendi özel hatamızı fırlatıyoruz.
                 .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + username));
-
         Tweet tweet = new Tweet();
         tweet.setContent(tweetCreateDTO.getContent());
         tweet.setUser(user);
@@ -64,9 +62,8 @@ public class TweetServiceImpl implements TweetService {
     @Override
     public Tweet update(Long id, TweetCreateDTO tweetCreateDTO, String username) {
         Tweet existingTweet = getById(id);
-        // Güvenlik Kuralı: Tweet'i sadece sahibi güncelleyebilir.
+        // Tweet'i sadece sahibi güncelleyebilir.
         if(!existingTweet.getUser().getUsername().equals(username)){
-            // RuntimeException yerine özel hata sınıfı
             throw new TwitterAuthException("Yetkisiz işlem: Bu tweet'i güncelleme yetkiniz yok.");
         }
         existingTweet.setContent(tweetCreateDTO.getContent());
@@ -79,9 +76,8 @@ public class TweetServiceImpl implements TweetService {
     @Override
     public void delete(Long id, String username) {
         Tweet tweetToDelete = getById(id);
-        // Güvenlik Kuralı: Tweet'i sadece sahibi silebilir.
+        //  Tweet'i sadece sahibi silebilir.
         if (!tweetToDelete.getUser().getUsername().equals(username)) {
-            // RuntimeException yerine özel hata sınıfı
             throw new TwitterAuthException("Yetkisiz işlem: Bu tweet'i silme yetkiniz yok.");
         }
         tweetRepository.delete(tweetToDelete);
