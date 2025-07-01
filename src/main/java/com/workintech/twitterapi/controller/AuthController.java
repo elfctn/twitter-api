@@ -15,14 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+
+
 @RequestMapping("/auth")
 public class AuthController {
-
     private final AuthenticationService authenticationService;
-
     public AuthController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
+
 
     @PostMapping("/register")
     public ResponseEntity<RegistrationResponseDTO> register(@Valid @RequestBody UserCreateDTO userCreateDTO) {
@@ -34,7 +35,7 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // Yeni eklenen /login endpoint'i
+
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         String token = authenticationService.login(loginRequestDTO);

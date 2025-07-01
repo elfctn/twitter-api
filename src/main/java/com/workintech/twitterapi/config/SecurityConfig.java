@@ -24,32 +24,32 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
-    // YENİ EKLENEN BÖLÜM: CORS ayarlarını tanımlıyoruz.
+
+    //2.Cors hatası çözümü-izinler
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // İzin verilen kaynak (React uygulamamızın adresi)
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-        // İzin verilen HTTP metotları (GET, POST, vb.)
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        // İzin verilen başlıklar (Authorization, Content-Type, vb.)
         configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
+
+
+    //1.herkese açıkmı korumalı mı kontrolü
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         return http
-                // YENİ EKLENEN SATIR: Tanımladığımız CORS ayarlarını kullanmasını söylüyoruz.
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) //cors için ekledim
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
@@ -60,3 +60,5 @@ public class SecurityConfig {
                 .build();
     }
 }
+
+

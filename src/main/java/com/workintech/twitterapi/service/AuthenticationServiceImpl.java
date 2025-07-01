@@ -40,11 +40,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public String login(LoginRequestDTO loginRequestDTO) {
-        // Spring Security' kimlik doğrulama mekanizmasını tetikle
+        // Spring Security kimlik doğrulama mekanizmasını tetikle
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword())
         );
-        // Kimlik doğrulama başarılıysa, TokenService'i kullanarak bir JWT üretiyoruz.
+        // Kimlik doğrulama başarılıysa TokenServicei kullanarak bir JWT üret.
         return tokenService.generateToken(authentication);
     }
 }

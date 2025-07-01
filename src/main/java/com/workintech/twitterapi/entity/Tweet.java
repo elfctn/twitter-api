@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "tweet", schema = "public") // Tweet, rezerve bir kelime olmadığı için tırnak işareti gerekmez.
+@Table(name = "tweet", schema = "public")
 public class Tweet {
 
     @Id
@@ -30,20 +30,20 @@ public class Tweet {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @JsonBackReference //json'a dahil EDILMEZ
+    @JoinColumn(name = "user_id") // foregn key
+    @JsonBackReference //jsona dahil edilmez
     private User user;
 
     @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "tweet-comments")//json'a dahil edilir
+    @JsonManagedReference(value = "tweet-comments")//jsona dahil edilir
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "tweet-likes")//json'a dahil edilir
+    @JsonManagedReference(value = "tweet-likes")
     private List<Like> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "tweet-retweets") //json'a dahil edilir
+    @JsonManagedReference(value = "tweet-retweets")
     private List<Retweet> retweets = new ArrayList<>();
 
     @Column(name="created_at")

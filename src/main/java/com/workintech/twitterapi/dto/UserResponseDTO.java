@@ -5,9 +5,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * Bir kullanıcı hakkındaki genel bilgileri ve tweet özetlerini içeren DTO.
- */
+
 @Data
 @NoArgsConstructor
 public class UserResponseDTO {
@@ -18,9 +16,17 @@ public class UserResponseDTO {
 
 
 
-    /**
-     * Kullanıcının tweet'lerinin sadece ID ve içeriğini gösteren özet DTO.
-     */
+
+
+
+
+
+
+
+
+
+    // DAHA SONRA AYRI SINIF OLUŞTURACAĞIM
+
     @Data
     @NoArgsConstructor
     public static class TweetSummaryDTO {
@@ -35,4 +41,3 @@ public class UserResponseDTO {
 
 
 }
-//registten sonra user sayfasında görünenler

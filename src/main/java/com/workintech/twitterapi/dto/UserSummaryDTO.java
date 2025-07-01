@@ -16,5 +16,3 @@ public class UserSummaryDTO {
 
 
 
-// kullanıcı hakkındaki temel bilgileri taşımak için bir dto sınıfı
-// Diğer tüm DTO'lar bu sınıfı kullanacak- merkezi dto-

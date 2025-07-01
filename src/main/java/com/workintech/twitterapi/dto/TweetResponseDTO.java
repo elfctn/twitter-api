@@ -14,7 +14,7 @@ public class TweetResponseDTO {
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private UserSummaryDTO user;    // Artık bağımsız olan UserSummaryDTO'yu kullanıyor.
+    private UserSummaryDTO user;
     private List<CommentResponseDTO> comments;
     private List<LikeResponseDTO> likes;
     private List<RetweetResponseDTO> retweets;

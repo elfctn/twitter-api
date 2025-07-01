@@ -24,6 +24,8 @@ public class CommentServiceImpl implements CommentService {
         this.tweetService = tweetService;
     }
 
+
+
     @Override
     public Comment save(Long tweetId, String username, CommentCreateDTO commentCreateDTO) {
         User user = userService.findByUsername(username)
@@ -37,10 +39,13 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.save(comment);
     }
 
+
+
     @Override
     public List<Comment> getByTweetId(Long tweetId) {
         return commentRepository.findByTweetId(tweetId);
     }
+
 
 
     @Override
@@ -48,6 +53,8 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Yorum bulunamadı: " + id));
     }
+
+
 
 
     // Yorumu sadece sahibi güncelleyebilir.
@@ -63,10 +70,10 @@ public class CommentServiceImpl implements CommentService {
 
 
 
+
     @Override
     public void delete(Long id, String username) {
         Comment commentToDelete = getById(id);
-
         // Bu kullanıcı adının var olduğunu garantilemek için bir kontrol.
         User user = userService.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + username));
@@ -76,7 +83,6 @@ public class CommentServiceImpl implements CommentService {
         if (!isCommentOwner && !isTweetOwner) {
             throw new TwitterAuthException("Yetkisiz işlem: Bu yorumu silme yetkiniz yok.");
         }
-
         commentRepository.delete(commentToDelete);
     }
 }

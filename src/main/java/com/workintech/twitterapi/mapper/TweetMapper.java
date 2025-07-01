@@ -6,7 +6,6 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-// Bu mapper artık CommentMapper, LikeMapper ve RetweetMapper'ı da kullanacak.
 @Mapper(componentModel = "spring", uses = {CommentMapper.class, LikeMapper.class, RetweetMapper.class})
 public interface TweetMapper {
 

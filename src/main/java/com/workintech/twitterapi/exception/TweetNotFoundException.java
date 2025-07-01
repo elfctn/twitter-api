@@ -7,9 +7,3 @@ public class TweetNotFoundException extends TwitterException {
     super(message, HttpStatus.NOT_FOUND); // HTTP 404 - Not Found
   }
 }
-//Tweet bulunamadı durumuna özel hata sınıfı
-
-//TweetServiceImpl içinde
-// throw new RuntimeException(...) demek yerine
-// throw new TweetNotFoundException(...) dedim
-//daha açıklayıcı oldu

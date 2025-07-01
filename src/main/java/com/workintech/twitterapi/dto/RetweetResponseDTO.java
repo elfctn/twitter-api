@@ -10,9 +10,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RetweetResponseDTO {
     private Long id;
-    // Artık bağımsız olan UserSummaryDTO'yu kullanıyor.
     private UserSummaryDTO user;
     private LocalDateTime createdAt;
     private Long tweetId;
-    // İçindeki 'static class UserSummaryDTO' tanımı SİLİNDİ.
+
 }

@@ -62,7 +62,7 @@ public class TweetServiceImpl implements TweetService {
     @Override
     public Tweet update(Long id, TweetCreateDTO tweetCreateDTO, String username) {
         Tweet existingTweet = getById(id);
-        // Tweet'i sadece sahibi güncelleyebilir.
+        // Tweeti sadece sahibi güncelleyebilir.
         if(!existingTweet.getUser().getUsername().equals(username)){
             throw new TwitterAuthException("Yetkisiz işlem: Bu tweet'i güncelleme yetkiniz yok.");
         }
@@ -76,7 +76,7 @@ public class TweetServiceImpl implements TweetService {
     @Override
     public void delete(Long id, String username) {
         Tweet tweetToDelete = getById(id);
-        //  Tweet'i sadece sahibi silebilir.
+        //  Tweeti sadece sahibi silebilir.
         if (!tweetToDelete.getUser().getUsername().equals(username)) {
             throw new TwitterAuthException("Yetkisiz işlem: Bu tweet'i silme yetkiniz yok.");
         }

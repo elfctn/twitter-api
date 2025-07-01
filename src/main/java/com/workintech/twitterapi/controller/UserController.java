@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/users") // RESTful standartları için çoğul isim
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
-    private final UserMapper userMapper; // UserMapper'ı enjekte ediyoruz.
+    private final UserMapper userMapper;
 
-    // Bağımlılığı constructor üzerinden alıyoruz.
     public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
@@ -25,11 +24,12 @@ public class UserController {
 
     @GetMapping("/{username}")
     public UserResponseDTO getUserByUsername(@PathVariable String username) {
-        // Servisimiz Optional<User> döndürdüğü için, sonucu orElseThrow ile güvenle açıyoruz.
+
         User user = userService.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + username));
 
-        // Manuel `convertToDTO` yerine, `userMapper`'ı kullanıyoruz.
+
+        // Manuel convertToDTO yerine----- userMapper`
         return userMapper.userToUserResponseDTO(user);
     }
 }

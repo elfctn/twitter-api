@@ -6,8 +6,8 @@ import java.util.Optional;
 
 
 public interface UserService {
-    Optional<User> findByUsername(String username);//Kullanıcı varsa getir yosa boş dön
-    User getById(Long id);// olduğu zaman ID ile getir --yoksa exception fırlatacak
+    Optional<User> findByUsername(String username);
+    User getById(Long id);
 }
 
 

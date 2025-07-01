@@ -14,24 +14,24 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "\"User\"", schema = "public") // Veritabanı tablo adı ve şema
+@Table(name = "\"User\"", schema = "public")
 public class User {
 
-    @Id // Birincil anahtar olduğunu belirtir
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Otomatik artan ID
-    @Column(name = "id") // Kolon adı
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "email", nullable = false, unique = true) // Boş olamaz, benzersiz
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false) // Boş olamaz
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "username", nullable = false, unique = true) // Boş olamaz, benzersiz
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "created_at") // Oluşturulma tarihi kolonu
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -50,7 +50,7 @@ public class User {
     @JsonManagedReference(value = "user-retweets")
     private List<Retweet> retweets = new ArrayList<>();
 
-    @PrePersist // Kaydetme işleminden önce çalışır, kaydın oluşturulma zamanı otomatik olarak ayarlan
+    @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }

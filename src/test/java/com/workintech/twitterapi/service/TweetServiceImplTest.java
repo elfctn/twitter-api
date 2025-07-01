@@ -141,7 +141,6 @@ class TweetServiceImplTest {
         assertThrows(TwitterAuthException.class, () -> {
             tweetService.delete(100L, "non_owner_user");
         });
-
         verify(tweetRepository, never()).delete(any(Tweet.class));
     }
 }

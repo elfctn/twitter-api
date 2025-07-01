@@ -13,11 +13,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 }
 
 
-//ayrıca boolean;
-// Likeı geri almak işlemi için silinecek olan o spesifik Like kaydını
-// veritabanından bulmamı da sağlayacak
-
-
 
 
 

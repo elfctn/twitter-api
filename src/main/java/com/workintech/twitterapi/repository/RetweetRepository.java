@@ -13,6 +13,4 @@ public interface RetweetRepository extends JpaRepository<Retweet, Long> {
 
 }
 
-//ayrıca boolean;
-// Retweeti geri almak işlemi için silinecek olan o spesifik Retweet kaydını
-// veritabanından bulmamı da sağlayacak
+

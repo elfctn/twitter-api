@@ -7,4 +7,3 @@ public class CommentCreateDTO {
     private String content;
 }
 
-//yotum oluşturma isteği için sadece içerik taşıyor

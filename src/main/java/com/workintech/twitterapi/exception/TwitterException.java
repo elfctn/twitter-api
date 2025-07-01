@@ -2,6 +2,7 @@ package com.workintech.twitterapi.exception;
 
 import org.springframework.http.HttpStatus;
 
+
 public class TwitterException extends RuntimeException {
     private HttpStatus status;
 
@@ -15,5 +16,5 @@ public class TwitterException extends RuntimeException {
     }
 }
 
-//genel sorunlara RuntimeException demek yerine
-// onlara özel isimler veriyorum
+
+

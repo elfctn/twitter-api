@@ -31,12 +31,12 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();// Kimliği doğrulanmış kullanıcının adını al
-        return Jwts.builder()// JWT'yi oluşturmaya başla
-                .setSubject(username)// "subject": Token'ın kiminle ilgili olduğunu belir (kullanıcı adı).
-                .setIssuedAt(new Date())// "issuedAt": Token'ın ne zaman oluşturulduğunu belirt
+        return Jwts.builder()// JWTyi oluşturmaya başla
+                .setSubject(username)// subject: Token'ın kiminle ilgili olduğunu belir (kullanıcı adı).
+                .setIssuedAt(new Date())// issuedAt: Token'ın ne zaman oluşturulduğunu belirt
                 .setExpiration(new Date(System.currentTimeMillis() + expiration)) // "expiration": Token'ın ne zaman geçersiz olacağını belirt
                 .signWith(secretKey, SignatureAlgorithm.HS256)// "signWith": Token'ı, bizim gizli anahtarımızla ve HS256 algoritmasıyla imzala
                                                               // Bu imza, token'ın yolda değiştirilmediğini garantiler.
-                .compact();// Son olarak, sıkıştırılmış ve güvenli token stringini oluştur
+                .compact();//, sıkıştırılmış güvenli token stringini oluştur
     }
 }

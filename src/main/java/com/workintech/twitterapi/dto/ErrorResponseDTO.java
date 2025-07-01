@@ -14,5 +14,3 @@ public class ErrorResponseDTO {
 }
 
 
-//Hata olduğunda kullanıcıya nasıl bir JSON göndereceğimi
-// tanımlayan bir rapor şablonu (DTO) oluşturmuş oldum

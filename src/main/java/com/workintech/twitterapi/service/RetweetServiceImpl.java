@@ -30,7 +30,7 @@ public class RetweetServiceImpl implements RetweetService {
         User user = userService.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + username));
         Tweet tweet = tweetService.getById(tweetId);
-        //  Bir kullanıcı aynı tweet'i tekrar retweetleyemez.
+        //   kullanıcı aynı tweeti tekrar retweetleyemez.
         if (retweetRepository.existsByTweetIdAndUserId(tweetId, user.getId())) {
             throw new TwitterConflictException("Bu tweet zaten bu kullanıcı tarafından retweet edilmiş.");
         }
@@ -42,16 +42,18 @@ public class RetweetServiceImpl implements RetweetService {
 
 
 
+    
     @Override
     public void delete(Long retweetId, String username) {
         Retweet retweetToDelete = retweetRepository.findById(retweetId)
                 .orElseThrow(() -> new RetweetNotFoundException("Retweet kaydı bulunamadı."));
-        //  Retweet'i sadece onu oluşturan kullanıcı silebilir.
+        //  Retweeti sadece onu oluşturan kullanıcı silebilir.
         if (!retweetToDelete.getUser().getUsername().equals(username)) {
             throw new TwitterAuthException("Yetkisiz işlem: Bu retweet'i silme yetkiniz yok.");
         }
         retweetRepository.delete(retweetToDelete);
     }
+
 
 
 

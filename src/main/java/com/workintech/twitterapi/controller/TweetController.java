@@ -17,7 +17,7 @@ import java.util.List;
 public class TweetController {
 
     private final TweetService tweetService;
-    private final TweetMapper tweetMapper; // Mapper'ı enjekte ediyoruz
+    private final TweetMapper tweetMapper;
 
     public TweetController(TweetService tweetService, TweetMapper tweetMapper) {
         this.tweetService = tweetService;
@@ -28,14 +28,13 @@ public class TweetController {
     public ResponseEntity<TweetResponseDTO> createTweet(@RequestBody TweetCreateDTO tweetCreateDTO, Authentication authentication) {
         String username = authentication.getName();
         Tweet savedTweet = tweetService.save(tweetCreateDTO, username);
-        // Artık manuel `convertToDTO` yerine, otomatik `tweetMapper`'ı kullanıyoruz.
+
         return new ResponseEntity<>(tweetMapper.tweetToTweetResponseDTO(savedTweet), HttpStatus.CREATED);
     }
 
     @GetMapping
     public List<TweetResponseDTO> getAllTweets() {
         List<Tweet> tweets = tweetService.getAll();
-        // Liste dönüşümü için de mapper'ımızı kullanıyoruz. stream().map().collect()'e gerek kalmadı.
         return tweetMapper.tweetListToTweetResponseDTOList(tweets);
     }
 

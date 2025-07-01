@@ -26,4 +26,3 @@ public class UserCreateDTO {
 }
 
 
-//regist olurken istenilenler
