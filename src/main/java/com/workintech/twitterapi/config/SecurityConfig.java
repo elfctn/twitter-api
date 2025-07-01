@@ -16,22 +16,24 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
+//tüm güvenlik kuralları -talimatları bu sınıfta
 @Configuration
 public class SecurityConfig {
 
+  //şifre şifreleme
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-
+ //kimlik kontrolü
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
 
-    //2.Cors hatası çözümü-izinler
+    //Cors hatası çözümü-izinler
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -45,7 +47,7 @@ public class SecurityConfig {
 
 
 
-    //1.herkese açıkmı korumalı mı kontrolü
+    //herkese açıkmı korumalı mı kontrolü
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         return http
@@ -53,9 +55,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
+                   //auth/... lar izinli
                     auth.requestMatchers("/auth/**").permitAll();
+                    //auth/...dışındakiler giremez
                     auth.anyRequest().authenticated();
                 })
+                //herkesi en önce jwtauth kontrol etsin
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

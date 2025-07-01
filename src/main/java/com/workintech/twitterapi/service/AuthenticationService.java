@@ -6,6 +6,6 @@ import com.workintech.twitterapi.entity.User;
 
 public interface AuthenticationService {
     User register(UserCreateDTO userCreateDTO);
-    String login(LoginRequestDTO loginRequestDTO); //JWT stringi döndürecek.
+    String login(LoginRequestDTO loginRequestDTO); //JWT stringi döndürecek
 }
 

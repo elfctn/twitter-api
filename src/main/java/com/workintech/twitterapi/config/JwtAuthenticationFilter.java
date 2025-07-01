@@ -22,6 +22,7 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+
     @Value("${jwt.secret}")
     private String secret;
     private final UserDetailsService userDetailsService;
@@ -32,8 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
 
-
-
+    //geçerlilik süresi ve key kojntrolü yapar
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");

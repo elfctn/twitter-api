@@ -20,11 +20,6 @@ public class UserResponseDTO {
 
 
 
-
-
-
-
-
     // DAHA SONRA AYRI SINIF OLUŞTURACAĞIM
 
     @Data

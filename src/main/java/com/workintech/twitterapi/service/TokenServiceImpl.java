@@ -34,8 +34,8 @@ public class TokenServiceImpl implements TokenService {
         return Jwts.builder()// JWTyi oluşturmaya başla
                 .setSubject(username)// subject: Token'ın kiminle ilgili olduğunu belir (kullanıcı adı).
                 .setIssuedAt(new Date())// issuedAt: Token'ın ne zaman oluşturulduğunu belirt
-                .setExpiration(new Date(System.currentTimeMillis() + expiration)) // "expiration": Token'ın ne zaman geçersiz olacağını belirt
-                .signWith(secretKey, SignatureAlgorithm.HS256)// "signWith": Token'ı, bizim gizli anahtarımızla ve HS256 algoritmasıyla imzala
+                .setExpiration(new Date(System.currentTimeMillis() + expiration)) // expiration: Token'ın ne zaman geçersiz olacağını belirt
+                .signWith(secretKey, SignatureAlgorithm.HS256)// signWith: Token'ı, bizim gizli anahtarımızla ve HS256 algoritmasıyla imzala
                                                               // Bu imza, token'ın yolda değiştirilmediğini garantiler.
                 .compact();//, sıkıştırılmış güvenli token stringini oluştur
     }
