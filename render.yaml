@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: twitterapi
+    env: docker
+    plan: free
+    envVars:
+      - key: DB_JDBC_URL
+        fromDatabase:
+          name: twitterdb
+          property: connectionString
+      - key: DB_USER
+        fromDatabase:
+          name: twitterdb
+          property: user
+      - key: DB_PASS
+        fromDatabase:
+          name: twitterdb
+          property: password
