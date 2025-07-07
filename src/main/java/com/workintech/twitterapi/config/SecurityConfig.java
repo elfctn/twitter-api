@@ -47,7 +47,7 @@ public class SecurityConfig {
 
 
 
-    //herkese açıkmı korumalı mı kontrolü
+    //hangi endpointlere açık izinler hangisine kapalı?
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         return http

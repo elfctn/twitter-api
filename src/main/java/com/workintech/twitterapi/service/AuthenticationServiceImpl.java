@@ -26,7 +26,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
 
-
     @Override
     public User register(UserCreateDTO userCreateDTO) {
         User user = new User();
@@ -37,10 +36,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
 
-
     @Override
     public String login(LoginRequestDTO loginRequestDTO) {
-        // Spring Security kimlik doğrulama mekanizmasını tetikle
+        // Spring Security kimlik doğrulama mekanizmasını tetikle -----repodaki şifre ile uyuşuyor mu kontrol eder
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword())
         );
